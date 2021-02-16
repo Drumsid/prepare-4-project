@@ -8,12 +8,18 @@ class InMemoryKV
     {
         $this->base = $base;
     }
-    public function get($key)
+    public function get($key, $default = '')
     {
+        if (isset($this->base[$key])) {
+            return $this->base[$key];
+        }
+        if (! array_key_exists($key, $this->base) && $default != '') {
+            return $default ;
+        }
         if (! array_key_exists($key, $this->base)) {
             return null;
         }
-        return $this->base[$key];
+        
     }
     public function set($key, $value)
     {
@@ -31,6 +37,20 @@ class InMemoryKV
     }
 }
 
-$mem = new InMemoryKV(['key' => 'value']);
-print_r($mem->set('key2', 'test'));
-print_r($mem->unset('key'));
+function swapKeyValue($obj)
+{
+    $arr = $obj->toArray();
+    foreach ($arr as $key => $value) {
+        $obj->unset($key);
+    }
+    foreach ($arr as $key => $value) {
+        $obj->set($value, $key);
+    }
+}
+
+
+$mem = new InMemoryKV(['key' => 10, '123' => 'qsdas']);
+
+swapKeyValue($mem);
+
+print_r($mem);
