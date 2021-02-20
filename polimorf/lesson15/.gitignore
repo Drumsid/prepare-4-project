@@ -1,0 +1,8 @@
+/vendor/*
+logs
+*.swo
+*.swp
+*.cache
+*.vscode
+build
+.codeclimate
